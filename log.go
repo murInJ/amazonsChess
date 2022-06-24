@@ -1,4 +1,4 @@
-package main
+package amazonsChess
 
 // Log
 // @Param GameState 棋盘状态
