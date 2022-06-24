@@ -1,4 +1,4 @@
-module github.com/murInJ/go-amazonsChess
+module amazonsChess
 
 go 1.18
 
