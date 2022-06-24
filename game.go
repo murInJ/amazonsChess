@@ -1,4 +1,4 @@
-package amazonsChess
+package main
 
 import (
 	"encoding/json"
@@ -56,7 +56,7 @@ func (g *Game) GameOver() bool {
 	}
 }
 
-func (g *Game) logGenerate() ([]byte, error) {
+func (g *Game) LogGenerate() ([]byte, error) {
 	var oneLog Log
 	if g.GameOver() {
 		oneLog = Log{
@@ -98,7 +98,12 @@ func (g *Game) Start(isShow bool) [][]byte {
 	var logJson []byte
 	var err error
 
-	logJson, err = g.logGenerate()
+	err = g.Reset(g.CurrentPlayer)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	logJson, err = g.LogGenerate()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -118,7 +123,7 @@ func (g *Game) Start(isShow bool) [][]byte {
 		if isShow {
 			g.CurrentState.PrintState()
 		}
-		logJson, err = g.logGenerate()
+		logJson, err = g.LogGenerate()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -135,7 +140,7 @@ func (g *Game) Start(isShow bool) [][]byte {
 	}
 	fmt.Printf("winner is: %s\n", playerStr)
 
-	logJson, err = g.logGenerate()
+	logJson, err = g.LogGenerate()
 	if err != nil {
 		log.Fatal(err)
 	}

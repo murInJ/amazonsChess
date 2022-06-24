@@ -1,4 +1,4 @@
-package amazonsChess
+package main
 
 import (
 	"errors"
@@ -17,15 +17,6 @@ type State struct {
 }
 
 // NewState 3 6 30 39 60 69 93 96
-func (s *State) NewState(board []int, currentPlayer int) (*State, error) {
-	if len(board) != 100 || (currentPlayer != -1 && currentPlayer != 1) {
-		return nil, errors.New("wrong board length(need 100) or wrong currentPlayer(need 1 or -1)")
-	}
-	return &State{
-		Board:         board,
-		CurrentPlayer: currentPlayer,
-	}, nil
-}
 
 func (s *State) GetActionSpace(loc int) ([]int, error) {
 	if loc < 0 || loc >= 100 {

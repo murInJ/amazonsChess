@@ -1,4 +1,4 @@
-package amazonsChess
+package main
 
 import (
 	"bytes"
