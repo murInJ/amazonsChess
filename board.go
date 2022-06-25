@@ -9,14 +9,14 @@ import (
 	"time"
 )
 
-var DIR = []int{1, 10, 11, -1, -10, -11}
+var DIR = [][]int{{0, 1}, {1, 0}, {1, 1}, {0, -1}, {-1, 0}, {-1, -1}, {-1, 1}, {1, -1}}
 
 type State struct {
 	Board         []int
 	CurrentPlayer int
 }
 
-// NewState 3 6 30 39 60 69 93 96
+// NewState 3 6 30 39 60 69 93 96 loc
 
 func (s *State) GetActionSpace(loc int) ([]int, error) {
 	if loc < 0 || loc >= 100 {
@@ -24,12 +24,28 @@ func (s *State) GetActionSpace(loc int) ([]int, error) {
 	}
 	var actionSpace []int
 	for i := 0; i < 8; i++ {
-		loc_n := loc
-		for loc_n+DIR[i] != 0 {
-			loc_n += DIR[i]
-			actionSpace = append(actionSpace, loc_n)
+		locN := loc
+		tempRow := locN / 10
+		tempCol := locN % 10
+		for {
+			tempRow += DIR[i][0]
+			tempCol += DIR[i][1]
+			if tempRow < 0 || tempRow >= 10 || tempCol < 0 || tempCol >= 10 {
+				break
+			}
+
+			locN = 10*tempRow + tempCol
+			if s.Board[locN] != 0 {
+				break
+			}
+
+			actionSpace = append(actionSpace, locN)
 		}
 	}
+	//if len(actionSpace) == 0{
+	//	println(loc)
+	//	println("")
+	//}
 	return actionSpace, nil
 }
 
@@ -51,6 +67,10 @@ func (s *State) GetValid() []ChessMove {
 					log.Fatal(err)
 				}
 
+				if len(obstacleList) == 0 {
+					obstacleList = append(obstacleList, start)
+				}
+
 				for _, obstacle := range obstacleList {
 					validChess = append(validChess, ChessMove{
 						start:    start,
@@ -70,7 +90,7 @@ func (s *State) StateMove(move ChessMove) (*State, error) {
 	for _, validMove := range validChess {
 		if validMove.Equal(move) {
 			board := make([]int, 100)
-			_ = Clone(board, s.Board)
+			_ = copy(board, s.Board)
 			board[move.start] = 0
 			board[move.end] = s.CurrentPlayer
 			board[move.obstacle] = 2
@@ -93,7 +113,6 @@ func (s *State) StateMove(move ChessMove) (*State, error) {
 
 func (s *State) PrintState() {
 	for index, value := range s.Board {
-		fmt.Printf("%3d", value)
 		fmt.Fprintf(color.Output, "%s", num2colorStr(value, index))
 		if index%10 == 9 {
 			fmt.Println()
@@ -105,7 +124,7 @@ func (s *State) PrintState() {
 	} else {
 		playerStr = color.New(color.FgHiBlue).Sprintf("blue")
 	}
-	fmt.Printf("current player: %s\n", playerStr)
+	fmt.Printf("current player: %s \n\n", playerStr)
 }
 
 func (s *State) randomMove() (*State, error) {
@@ -121,15 +140,16 @@ func (s *State) randomMove() (*State, error) {
 	}
 	return state, nil
 }
+
 func num2colorStr(number int, loc int) string {
 	if number == 0 {
-		return color.New(color.FgHiWhite).Sprintf("%d", loc)
+		return color.New(color.BgWhite).Sprintf("%4d", loc)
 	} else if number == -1 {
-		return color.New(color.FgHiBlue).Sprint("#")
+		return color.New(color.BgHiBlue).Sprintf("%4d", loc)
 	} else if number == 1 {
-		return color.New(color.FgHiRed).Sprint("#")
+		return color.New(color.BgHiRed).Sprintf("%4d", loc)
 	} else if number == 2 {
-		return color.New(color.FgHiBlack).Sprint("#")
+		return color.New(color.BgHiBlack).Sprintf("%4s", ".")
 	}
 	return "ERR"
 }

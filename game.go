@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	"log"
+	"time"
 )
 
 type Game struct {
 	CurrentPlayer int
 	CurrentState  *State
 	winner        int
-	record        []string
 	Ai1Handler    func(*State) ChessMove
 	Ai2Handler    func(*State) ChessMove
 }
@@ -22,7 +22,6 @@ func (g *Game) NewGame(currentPlayer int) (*Game, error) {
 		return nil, errors.New("wrong currentPlayer(need -1 or 1)")
 	}
 	board := NewBoard()
-	var record []string
 	return &Game{
 		CurrentPlayer: currentPlayer,
 		CurrentState: &State{
@@ -30,7 +29,6 @@ func (g *Game) NewGame(currentPlayer int) (*Game, error) {
 			CurrentPlayer: currentPlayer,
 		},
 		winner: 0,
-		record: record,
 	}, nil
 }
 
@@ -48,12 +46,37 @@ func (g *Game) Reset(currentPlayer int) error {
 }
 
 func (g *Game) GameOver() bool {
-	validNum := len(g.CurrentState.GetValid())
-	if validNum == 0 {
-		return true
+	red := 0
+	blue := 0
+	for i := 0; i < 100; i++ {
+		if g.CurrentState.Board[i] == 1 || g.CurrentState.Board[i] == -1 {
+			row := i / 10
+			col := i % 10
+			for j := 0; j < 8; j++ {
+				tmpRow := row + DIR[j][0]
+				tmpCol := col + DIR[j][1]
+				tmpLoc := tmpRow*10 + tmpCol
+				if tmpRow >= 0 && tmpRow < 10 && tmpCol >= 0 && tmpCol < 10 && g.CurrentState.Board[tmpLoc] == 0 {
+					if g.CurrentState.Board[i] == 1 {
+						red++
+					} else {
+						blue++
+					}
+
+				}
+			}
+
+		}
+	}
+	if red == 0 {
+		g.winner = -1
+	} else if blue == 0 {
+		g.winner = 1
 	} else {
 		return false
 	}
+
+	return true
 }
 
 func (g *Game) LogGenerate() ([]byte, error) {
@@ -109,6 +132,7 @@ func (g *Game) Start(isShow bool) [][]byte {
 	}
 	record = append(record, logJson)
 
+	fmt.Print("\x1b7") // 保存光标位置 保存光标和Attrs <ESC> 7
 	for !g.GameOver() {
 		var err error
 		move := g.GetMove(g.CurrentState)
@@ -121,7 +145,12 @@ func (g *Game) Start(isShow bool) [][]byte {
 			}
 		}
 		if isShow {
+
+			fmt.Print("\x1b8")
+			fmt.Print("\x1b[2k") // 清空当前行的内容 擦除线<ESC> [2K
 			g.CurrentState.PrintState()
+
+			time.Sleep(50 * time.Millisecond)
 		}
 		logJson, err = g.LogGenerate()
 		if err != nil {
@@ -131,11 +160,9 @@ func (g *Game) Start(isShow bool) [][]byte {
 	}
 
 	var playerStr string
-	if g.CurrentPlayer == -1 {
-		g.winner = 1
+	if g.winner == 1 {
 		playerStr = color.New(color.FgHiRed).Sprintf("red")
 	} else {
-		g.winner = -1
 		playerStr = color.New(color.FgHiBlue).Sprintf("blue")
 	}
 	fmt.Printf("winner is: %s\n", playerStr)
