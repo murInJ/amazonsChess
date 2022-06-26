@@ -11,6 +11,10 @@ type ChessMove struct {
 	obstacle int
 }
 
+func (m ChessMove) GetVal() []int {
+	return []int{m.start,m.end,m.obstacle}
+}
+
 func NewChessMove(start ,end,obstacle int) *ChessMove{
 	return &ChessMove{
 		start:    start,
