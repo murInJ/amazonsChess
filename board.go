@@ -27,6 +27,13 @@ func (s *State) Str() string {
 	return string(b)
 }
 
+func NewState(board *[]int, currentPlayer int) *State {
+	return &State{
+		Board:         *board,
+		CurrentPlayer: currentPlayer,
+	}
+}
+
 //GetActionSpace get action space of diffrent direction by a loc
 func (s *State) GetActionSpace(loc int) ([]int, error) {
 	if loc < 0 || loc >= 100 {
