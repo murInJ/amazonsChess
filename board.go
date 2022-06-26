@@ -18,6 +18,7 @@ type State struct {
 
 // NewState 3 6 30 39 60 69 93 96 loc
 
+//GetActionSpace get action space of diffrent direction by a loc
 func (s *State) GetActionSpace(loc int) ([]int, error) {
 	if loc < 0 || loc >= 100 {
 		return nil, errors.New("illegal loc(need 0~99)")
@@ -127,7 +128,7 @@ func (s *State) PrintState() {
 	fmt.Printf("current player: %s \n\n", playerStr)
 }
 
-func (s *State) randomMove() (*State, error) {
+func (s *State) RandomMove() (*State, error) {
 	valid := s.GetValid()
 	if len(valid) == 0 {
 		return nil, errors.New("terminal state")

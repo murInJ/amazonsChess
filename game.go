@@ -32,6 +32,7 @@ func (g *Game) NewGame(currentPlayer int) (*Game, error) {
 	}, nil
 }
 
+//Reset reset a game, must call it befor a round start if not by calling function start
 func (g *Game) Reset(currentPlayer int) error {
 	if currentPlayer != -1 && currentPlayer != 1 {
 		return errors.New("wrong currentPlayer(need -1 or 1)")
@@ -137,7 +138,7 @@ func (g *Game) Start(isShow bool) [][]byte {
 		var err error
 		move := g.GetMove(g.CurrentState)
 		if move.Equal(ChessMove{}) {
-			g.CurrentState, _ = g.CurrentState.randomMove()
+			g.CurrentState, _ = g.CurrentState.RandomMove()
 		} else {
 			g.CurrentState, err = g.CurrentState.StateMove(move)
 			if err != nil {

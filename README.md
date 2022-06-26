@@ -10,7 +10,7 @@ amazonsChess have follows functions as so far:
 - randomly play
 - get chess history after one round
 - use AI written by yourself
-- colorful terminal and hidden option
+- colorful terminal and hidden option\
  ![](./preview.gif)
 
 ## install

@@ -11,6 +11,14 @@ type ChessMove struct {
 	obstacle int
 }
 
+func NewChessMove(start ,end,obstacle int) *ChessMove{
+	return &ChessMove{
+		start:    start,
+		end:      end,
+		obstacle: obstacle,
+	}
+}
+
 func (m ChessMove) Equal(move ChessMove) bool {
 	if m.start == move.start && m.end == move.end && m.obstacle == move.obstacle {
 		return true
