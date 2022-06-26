@@ -14,8 +14,8 @@ import (
 var DIR = [][]int{{0, 1}, {1, 0}, {1, 1}, {0, -1}, {-1, 0}, {-1, -1}, {-1, 1}, {1, -1}}
 
 type State struct {
-	Board         []int
-	CurrentPlayer int
+	Board         []int `json:"board,omitempty"`
+	CurrentPlayer int   `json:"current_player,omitempty"`
 }
 
 // NewState 3 6 30 39 60 69 93 96 loc
@@ -90,9 +90,9 @@ func (s *State) GetValid() []ChessMove {
 
 				for _, obstacle := range obstacleList {
 					validChess = append(validChess, ChessMove{
-						start:    start,
-						end:      end,
-						obstacle: obstacle,
+						Start:    start,
+						End:      end,
+						Obstacle: obstacle,
 					})
 				}
 			}
@@ -108,9 +108,9 @@ func (s *State) StateMove(move ChessMove) (*State, error) {
 		if validMove.Equal(move) {
 			board := make([]int, 100)
 			_ = copy(board, s.Board)
-			board[move.start] = 0
-			board[move.end] = s.CurrentPlayer
-			board[move.obstacle] = 2
+			board[move.Start] = 0
+			board[move.End] = s.CurrentPlayer
+			board[move.Obstacle] = 2
 
 			var currentPlayer int
 			if s.CurrentPlayer == -1 {

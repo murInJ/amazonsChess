@@ -11,11 +11,11 @@ import (
 )
 
 type Game struct {
-	CurrentPlayer int
-	CurrentState  *State
-	Winner        int
-	Ai1Handler    func(*State) ChessMove
-	Ai2Handler    func(*State) ChessMove
+	CurrentPlayer int                    `json:"current_player,omitempty"`
+	CurrentState  *State                 `json:"current_state,omitempty"`
+	Winner        int                    `json:"winner,omitempty"`
+	Ai1Handler    func(*State) ChessMove `json:"ai_1_handler,omitempty"`
+	Ai2Handler    func(*State) ChessMove `json:"ai_2_handler,omitempty"`
 }
 
 func (g *Game) NewGame(currentPlayer int) (*Game, error) {

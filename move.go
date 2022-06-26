@@ -6,25 +6,25 @@ import (
 )
 
 type ChessMove struct {
-	start    int
-	end      int
-	obstacle int
+	Start    int `json:"start,omitempty"`
+	End      int `json:"end,omitempty"`
+	Obstacle int `json:"obstacle,omitempty"`
 }
 
 func (m ChessMove) GetVal() []int {
-	return []int{m.start,m.end,m.obstacle}
+	return []int{m.Start, m.End, m.Obstacle}
 }
 
-func NewChessMove(start ,end,obstacle int) *ChessMove{
+func NewChessMove(start, end, obstacle int) *ChessMove {
 	return &ChessMove{
-		start:    start,
-		end:      end,
-		obstacle: obstacle,
+		Start:    start,
+		End:      end,
+		Obstacle: obstacle,
 	}
 }
 
 func (m ChessMove) Equal(move ChessMove) bool {
-	if m.start == move.start && m.end == move.end && m.obstacle == move.obstacle {
+	if m.Start == move.Start && m.End == move.End && m.Obstacle == move.Obstacle {
 		return true
 	}
 	return false
