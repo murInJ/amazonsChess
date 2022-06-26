@@ -4,15 +4,16 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/fatih/color"
 	"log"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 type Game struct {
 	CurrentPlayer int
 	CurrentState  *State
-	winner        int
+	Winner        int
 	Ai1Handler    func(*State) ChessMove
 	Ai2Handler    func(*State) ChessMove
 }
@@ -28,7 +29,7 @@ func (g *Game) NewGame(currentPlayer int) (*Game, error) {
 			Board:         board,
 			CurrentPlayer: currentPlayer,
 		},
-		winner: 0,
+		Winner: 0,
 	}, nil
 }
 
@@ -42,7 +43,7 @@ func (g *Game) Reset(currentPlayer int) error {
 		Board:         NewBoard(),
 		CurrentPlayer: currentPlayer,
 	}
-	g.winner = 0
+	g.Winner = 0
 	return nil
 }
 
@@ -70,9 +71,9 @@ func (g *Game) GameOver() bool {
 		}
 	}
 	if red == 0 {
-		g.winner = -1
+		g.Winner = -1
 	} else if blue == 0 {
-		g.winner = 1
+		g.Winner = 1
 	} else {
 		return false
 	}
@@ -86,7 +87,7 @@ func (g *Game) LogGenerate() ([]byte, error) {
 		oneLog = Log{
 			GameState: *g.CurrentState,
 			Status:    1,
-			Winner:    g.winner,
+			Winner:    g.Winner,
 		}
 	} else {
 		oneLog = Log{
@@ -161,7 +162,7 @@ func (g *Game) Start(isShow bool) [][]byte {
 	}
 
 	var playerStr string
-	if g.winner == 1 {
+	if g.Winner == 1 {
 		playerStr = color.New(color.FgHiRed).Sprintf("red")
 	} else {
 		playerStr = color.New(color.FgHiBlue).Sprintf("blue")

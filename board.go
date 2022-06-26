@@ -1,12 +1,14 @@
 package amazonsChess
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/fatih/color"
 	"log"
 	"math/rand"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 var DIR = [][]int{{0, 1}, {1, 0}, {1, 1}, {0, -1}, {-1, 0}, {-1, -1}, {-1, 1}, {1, -1}}
@@ -17,6 +19,13 @@ type State struct {
 }
 
 // NewState 3 6 30 39 60 69 93 96 loc
+func (s *State) Str() string {
+	b, err := json.Marshal(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(b)
+}
 
 //GetActionSpace get action space of diffrent direction by a loc
 func (s *State) GetActionSpace(loc int) ([]int, error) {
