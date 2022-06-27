@@ -18,7 +18,7 @@ type Game struct {
 	Ai2Handler    func(*State) ChessMove `json:"ai_2_handler,omitempty"`
 }
 
-func (g *Game) NewGame(currentPlayer int) (*Game, error) {
+func NewGame(currentPlayer int) (*Game, error) {
 	if currentPlayer != -1 && currentPlayer != 1 {
 		return nil, errors.New("wrong currentPlayer(need -1 or 1)")
 	}
