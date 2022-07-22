@@ -146,6 +146,7 @@ func (g *Game) Start(isShow bool) [][]byte {
 				log.Fatal(err)
 			}
 		}
+		g.CurrentPlayer = g.CurrentState.CurrentPlayer
 		if isShow {
 
 			fmt.Print("\x1b8")
